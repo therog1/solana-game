@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .container {
+            width: 300px;
+            margin: 0 auto;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Solana Game</h1>
+        <input type="number" id="guess" placeholder="Enter your guess (1-10)">
+        <button onclick="submitGuess()">Submit Guess</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@project-serum/anchor"></script>
+    <script>
+        // Define the program ID and other constants
+        const PROGRAM_ID = "89gqvKbgZA9JnNRsQAUZHp8rNYkQcNhSvKZZ1B3eHrhy"; // Your deployed program ID
+        const NETWORK_URL = "https://api.testnet.solana.com"; // Solana Testnet URL
+        const secretKey = new Uint8Array([
+            177, 126, 57, 207, 178, 106, 68, 136, 212, 187, 0, 67, 57, 148, 128, 121,
+            165, 249, 91, 115, 176, 238, 126, 253, 127, 186, 129, 218, 141, 217, 249, 210,
+            209, 230, 164, 220, 23, 189, 135, 81, 49, 33, 249, 166, 42, 40, 26, 43, 219,
+            66, 25, 172, 36, 146, 41, 48, 219, 233, 217, 154, 78, 17, 90, 18
+        ]); // Your private key (use the one you provided earlier)
+
+        // Setup the provider and connection
+        const connection = new solanaWeb3.Connection(NETWORK_URL, 'confirmed');
+        const wallet = solanaWeb3.Keypair.fromSecretKey(secretKey);
+        const provider = new anchor.AnchorProvider(connection, new anchor.Wallet(wallet), {});
+        const program = new anchor.Program(idl, PROGRAM_ID, provider);
+
+        // Function to handle the guess submission
+        async function submitGuess() {
+            const guess = parseInt(document.getElementById('guess').value);
+            const resultElement = document.getElementById('result');
+
+            if (isNaN(guess) || guess < 1 || guess > 10) {
+                resultElement.innerHTML = "Please enter a valid guess between 1 and 10.";
+                return;
+            }
+
+            try {
+                // Call the play_game function of the deployed program
+                const tx = await program.rpc.playGame(guess, {
+                    accounts: {
+                        player: wallet.publicKey,
+                    },
+                });
+
+                resultElement.innerHTML = `Transaction successful! Your guess: ${guess}`;
+            } catch (error) {
+                resultElement.innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
