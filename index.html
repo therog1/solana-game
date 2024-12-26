@@ -62,22 +62,21 @@
         const program = new anchor.Program(idl, PROGRAM_ID, provider);
 
         // Connect to the Phantom wallet
-        async function connectWallet() {
-            console.log("Attempting to connect wallet...");
-            if (window.solana && window.solana.isPhantom) {
-                try {
-                    await window.solana.connect(); // Request the user to connect their wallet
-                    wallet = new anchor.Wallet(window.solana);
-                    document.getElementById('connect-wallet').innerText = `Wallet Connected: ${wallet.publicKey.toString()}`;
-                    console.log("Wallet Connected:", wallet.publicKey.toString());
-                } catch (error) {
-                    console.error("Error connecting wallet:", error);
-                    alert("Wallet connection failed.");
-                }
-            } else {
-                alert("Please install Phantom wallet.");
-            }
+       async function connectWallet() {
+    if (window.solana && window.solana.isPhantom) {
+        try {
+            await window.solana.connect(); // Request the user to connect their wallet
+            wallet = new anchor.Wallet(window.solana);
+            document.getElementById('connect-wallet').innerText = `Wallet Connected: ${wallet.publicKey.toString()}`;
+            console.log("Wallet Connected:", wallet.publicKey.toString());
+        } catch (error) {
+            console.error("Error connecting wallet:", error);
+            alert("Wallet connection failed.");
         }
+    } else {
+        alert("Please install Phantom wallet.");
+    }
+}
 
         // Function to handle the guess submission
         async function submitGuess() {
