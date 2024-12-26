@@ -39,7 +39,7 @@
 <body>
     <div class="container">
         <h1>Solana Game</h1>
-        <button onclick="connectWallet()">Connect Wallet</button>
+        <button id="connect-wallet" onclick="connectWallet()">Connect Wallet</button>
         <input type="number" id="guess" placeholder="Enter your guess (1-10)">
         <button onclick="submitGuess()">Submit Guess</button>
         <div class="result" id="result"></div>
@@ -64,8 +64,7 @@
                 try {
                     await window.solana.connect(); // Request the user to connect their wallet
                     wallet = new anchor.Wallet(window.solana);
-                    document.querySelector("button").innerText = `Wallet Connected: ${wallet.publicKey.toString()}`;
-                    // Display the connected wallet address
+                    document.getElementById('connect-wallet').innerText = `Wallet Connected: ${wallet.publicKey.toString()}`;
                     console.log("Wallet Connected:", wallet.publicKey.toString());
                 } catch (error) {
                     console.error("Error connecting wallet:", error);
