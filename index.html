@@ -60,7 +60,7 @@
 
         // Connect to the Phantom wallet
         async function connectWallet() {
-            if (window.solana) {
+            if (window.solana && window.solana.isPhantom) {
                 try {
                     await window.solana.connect(); // Request the user to connect their wallet
                     wallet = new anchor.Wallet(window.solana);
