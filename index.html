@@ -56,10 +56,14 @@
         // Setup the connection
         const connection = new solanaWeb3.Connection(NETWORK_URL, 'confirmed');  // Connect to Testnet
         const provider = new anchor.AnchorProvider(connection, wallet, {});
+
+        // Ensure IDL is defined
+        const idl = {/* IDL object here */};
         const program = new anchor.Program(idl, PROGRAM_ID, provider);
 
         // Connect to the Phantom wallet
         async function connectWallet() {
+            console.log("Attempting to connect wallet...");
             if (window.solana && window.solana.isPhantom) {
                 try {
                     await window.solana.connect(); // Request the user to connect their wallet
