@@ -45,8 +45,9 @@
         <div class="result" id="result"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@project-serum/anchor"></script>
+    <!-- Include Solana Web3.js and Anchor libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@project-serum/anchor@latest"></script>
     <script>
         // Define the program ID and other constants
         const PROGRAM_ID = "89gqvKbgZA9JnNRsQAUZHp8rNYkQcNhSvKZZ1B3eHrhy"; // Your deployed program ID
@@ -56,27 +57,24 @@
         // Setup the connection
         const connection = new solanaWeb3.Connection(NETWORK_URL, 'confirmed');  // Connect to Testnet
         const provider = new anchor.AnchorProvider(connection, wallet, {});
-
-        // Ensure IDL is defined
-        const idl = {/* IDL object here */};
         const program = new anchor.Program(idl, PROGRAM_ID, provider);
 
         // Connect to the Phantom wallet
-       async function connectWallet() {
-    if (window.solana && window.solana.isPhantom) {
-        try {
-            await window.solana.connect(); // Request the user to connect their wallet
-            wallet = new anchor.Wallet(window.solana);
-            document.getElementById('connect-wallet').innerText = `Wallet Connected: ${wallet.publicKey.toString()}`;
-            console.log("Wallet Connected:", wallet.publicKey.toString());
-        } catch (error) {
-            console.error("Error connecting wallet:", error);
-            alert("Wallet connection failed.");
+        async function connectWallet() {
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    await window.solana.connect(); // Request the user to connect their wallet
+                    wallet = new anchor.Wallet(window.solana);
+                    document.getElementById('connect-wallet').innerText = `Wallet Connected: ${wallet.publicKey.toString()}`;
+                    console.log("Wallet Connected:", wallet.publicKey.toString());
+                } catch (error) {
+                    console.error("Error connecting wallet:", error);
+                    alert("Wallet connection failed.");
+                }
+            } else {
+                alert("Please install Phantom wallet.");
+            }
         }
-    } else {
-        alert("Please install Phantom wallet.");
-    }
-}
 
         // Function to handle the guess submission
         async function submitGuess() {
